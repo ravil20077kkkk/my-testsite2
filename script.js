@@ -1,22 +1,33 @@
 let users = {};
 let currentUser = null;
 
+function showRegistration() {
+    document.getElementById('registration').style.display = 'block';
+    document.getElementById('login').style.display = 'none';
+}
+
+function showLogin() {
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('registration').style.display = 'none';
+}
+
 function register() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
 
     if (username && password && !users[username]) {
-        users[username] = { password: password, balance: 1000, messages: [], transactions: [] };
+        users[username] = { 
+            password: password, 
+            balance: 1000, 
+            messages: [], 
+            transactions: [], 
+            registrationDate: new Date() 
+        };
         alert('Пользователь зарегистрирован!');
-        document.getElementById('registration').style.display = 'none';
         showLogin();
     } else {
         alert('Имя пользователя уже занято или пустое!');
     }
-}
-
-function showLogin() {
-    document.getElementById('login').style.display = 'block';
 }
 
 function login() {
@@ -26,7 +37,6 @@ function login() {
     if (users[username] && users[username].password === password) {
         currentUser = username;
         alert('Вы успешно вошли!');
-        document.getElementById('login').style.display = 'none';
         showDashboard();
     } else {
         alert('Неправильное имя пользователя или пароль!');
@@ -38,26 +48,17 @@ function showDashboard() {
     document.getElementById('userDisplay').innerText = currentUser;
     document.getElementById('balanceDisplay').innerText = users[currentUser].balance;
     updateTransactionHistory();
-}
-
-function changeName() {
-    const newUsername = document.getElementById('newUsername').value.trim();
-    if (newUsername && !users[newUsername]) {
-        users[newUsername] = users[currentUser];
-        delete users[currentUser];
-        currentUser = newUsername;
-        alert('Имя изменено!');
-        showDashboard();
-    } else {
-        alert('Имя пользователя уже занято или пустое!');
-    }
+    updateUserList();
 }
 
 function transfer() {
     const recipient = document.getElementById('recipient').value.trim();
     const amount = parseInt(document.getElementById('amount').value, 10);
-    
-    if (!recipient || !users[recipient]) {
+
+    // Проверка, является ли получатель именем пользователя или ссылкой
+    const recipientUser = recipient.startsWith('@') ? recipient.slice(1) : recipient;
+
+    if (!recipientUser || !users[recipientUser]) {
         alert('Пользователь не найден!');
         return;
     }
@@ -69,11 +70,11 @@ function transfer() {
 
     if (users[currentUser].balance >= amount) {
         users[currentUser].balance -= amount;
-        users[recipient].balance += amount;
-        users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipient}`);
-        users[recipient].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
-        alert(`$${amount} переведено пользователю ${recipient}`);
-        showDashboard();
+        users[recipientUser].balance += amount;
+        users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipientUser}`);
+        users[recipientUser].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
+        alert(`$${amount} переведено пользователю ${recipientUser}`);
+        updateTransactionHistory();
     } else {
         alert('Недостаточно средств для перевода!');
     }
@@ -102,7 +103,10 @@ function sendMessage() {
 }
 
 function viewProfile() {
-    const profileUsername = document.getElementById('profileUsername').value.trim();
+    const profileLink = document.getElementById('profileLink').value.trim();
+
+    // Проверка, является ли ссылка на профиль корректной
+    const profileUsername = profileLink.startsWith('@') ? profileLink.slice(1) : profileLink;
 
     if (profileUsername in users) {
         document.getElementById('profileUserDisplay').innerText = profileUsername;
@@ -132,5 +136,24 @@ function logout() {
     currentUser = null;
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('login').style.display = 'none';
-    document.getElementById('registration').style.display = 'block';
+    document.getElementById('registration').style.display = 'none';
+    document.getElementById('auth').style.display = 'block';
 }
+
+function updateUserList() {
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+    const sortedUsers = Object.keys(users).sort((a, b) => users[a].registrationDate - users[b].registrationDate);
+
+    sortedUsers.forEach((username, index) => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `${index + 1}. <a href="#" onclick="viewProfileByUsername('${username}')">${username}</a>`;
+        userList.appendChild(listItem);
+    });
+}
+
+function viewProfileByUsername(username) {
+    document.getElementById('profileLink').value = username;
+    viewProfile();
+}
+
