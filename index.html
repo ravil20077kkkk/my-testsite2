@@ -16,7 +16,19 @@
         }
         #dashboard {
             display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .header {
+            width: 100%;
+            display: flex;
             justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         .sidebar {
             width: 30%;
@@ -40,6 +52,18 @@
         #userList li, #transactionHistory li {
             margin: 5px 0;
         }
+        .button {
+            margin-right: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -48,19 +72,26 @@
             <h2>Регистрация</h2>
             <input type="text" id="username" placeholder="Имя пользователя">
             <input type="password" id="password" placeholder="Пароль">
-            <button onclick="register()">Зарегистрироваться</button>
-            <button onclick="showLogin()">Уже есть аккаунт?</button>
+            <button class="button" onclick="register()">Зарегистрироваться</button>
+            <button class="button" onclick="showLogin()">Уже есть аккаунт?</button>
         </div>
         <div id="login">
             <h2>Вход</h2>
             <input type="text" id="loginUsername" placeholder="Имя пользователя">
             <input type="password" id="loginPassword" placeholder="Пароль">
-            <button onclick="login()">Войти</button>
-            <button onclick="showRegistration()">Нет аккаунта?</button>
+            <button class="button" onclick="login()">Войти</button>
+            <button class="button" onclick="showRegistration()">Нет аккаунта?</button>
         </div>
     </div>
 
     <div id="dashboard" style="display: none;">
+        <div class="header">
+            <h2 id="greeting">Hello, World!</h2>
+            <div>
+                <span id="userDisplay"></span>
+                <button class="button" onclick="logout()">Выйти</button>
+            </div>
+        </div>
         <div class="sidebar">
             <h3>Пользователи</h3>
             <ul id="userList"></ul>
@@ -68,14 +99,14 @@
             <ul id="transactionHistory"></ul>
         </div>
         <div class="content">
-            <h2>Добро пожаловать, <span id="userDisplay"></span></h2>
             <h3>Баланс: <span id="balanceDisplay"></span></h3>
             <input type="text" id="recipient" placeholder="Получатель">
             <input type="number" id="amount" placeholder="Сумма">
-            <button onclick="transfer()">Перевести</button>
+            <button class="button" onclick="transfer()">Перевести</button>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
