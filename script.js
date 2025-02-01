@@ -71,9 +71,7 @@ function transfer() {
     const recipient = document.getElementById('recipient').value.trim();
     const amount = parseInt(document.getElementById('amount').value, 10);
 
-    const recipientUser = recipient.startsWith('@') ? recipient.slice(1) : recipient;
-
-    if (!recipientUser || !users[recipientUser]) {
+    if (!recipient || !users[recipient]) {
         alert('Пользователь не найден!');
         return;
     }
@@ -85,11 +83,11 @@ function transfer() {
 
     if (users[currentUser].balance >= amount) {
         users[currentUser].balance -= amount;
-        users[recipientUser].balance += amount;
-        users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipientUser}`);
-        users[recipientUser].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
+        users[recipient].balance += amount;
+        users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipient}`);
+        users[recipient].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
         saveUsers(); // Сохранение пользователей
-        alert(`$${amount} переведено пользователю ${recipientUser}`);
+        alert(`$${amount} переведено пользователю ${recipient}`);
         updateTransactionHistory();
     } else {
         alert('Недостаточно средств для перевода!');
@@ -117,6 +115,14 @@ function updateUserList() {
         listItem.innerHTML = `${index + 1}. ${username}`;
         userList.appendChild(listItem);
     });
+}
+
+function logout() {
+    currentUser = null;
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('registration').style.display = 'none';
+    document.getElementById('auth').style.display = 'block';
 }
 
 // Загрузка пользователей при старте
