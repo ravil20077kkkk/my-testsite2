@@ -34,9 +34,7 @@ function register() {
         users[username] = { 
             password: password, 
             balance: 1000, 
-            messages: [], 
             transactions: [], 
-            chat: {}, // Добавление чата
             registrationDate: new Date() 
         };
         saveUsers(); // Сохранение пользователей
@@ -62,7 +60,7 @@ function login() {
 }
 
 function showDashboard() {
-    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'flex';
     document.getElementById('userDisplay').innerText = currentUser;
     document.getElementById('balanceDisplay').innerText = users[currentUser].balance;
     updateTransactionHistory();
@@ -108,57 +106,6 @@ function updateTransactionHistory() {
     });
 }
 
-function sendMessage() {
-    const recipient = document.getElementById('messageRecipient').value.trim();
-    const content = document.getElementById('messageContent').value.trim();
-
-    if (recipient in users) {
-        users[currentUser].chat[recipient] = users[currentUser].chat[recipient] || [];
-        users[currentUser].chat[recipient].push({ from: currentUser, content: content });
-
-        users[recipient].chat[currentUser] = users[recipient].chat[currentUser] || [];
-        users[recipient].chat[currentUser].push({ from: currentUser, content: content });
-
-        saveUsers(); // Сохранение пользователей
-        alert(`Сообщение отправлено пользователю ${recipient}`);
-        updateChat(recipient); // Обновление чата
-    } else {
-        alert('Пользователь не найден!');
-    }
-}
-
-function viewProfile(username) {
-    const profileUser = users[username];
-    document.getElementById('profileUserDisplay').innerText = username;
-    document.getElementById('profileBalanceDisplay').innerText = profileUser.balance;
-
-    const messageList = document.getElementById('profileMessages');
-    messageList.innerHTML = '';
-    profileUser.messages.forEach(msg => {
-        const listItem = document.createElement('li');
-        listItem.innerText = `${msg.from}: ${msg.content}`;
-        messageList.appendChild(listItem);
-    });
-
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('profile').style.display = 'block';
-    
-    updateChat(username); // Обновление чата
-}
-
-function backToDashboard() {
-    document.getElementById('profile').style.display = 'none';
-    showDashboard();
-}
-
-function logout() {
-    currentUser = null;
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('registration').style.display = 'none';
-    document.getElementById('auth').style.display = 'block';
-}
-
 // Обновление списка пользователей
 function updateUserList() {
     const userList = document.getElementById('userList');
@@ -167,23 +114,11 @@ function updateUserList() {
 
     sortedUsers.forEach((username, index) => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `${index + 1}. <a href="#" onclick="viewProfile('${username}')">${username}</a>`;
+        listItem.innerHTML = `${index + 1}. ${username}`;
         userList.appendChild(listItem);
-    });
-}
-
-// Обновление чата
-function updateChat(recipient) {
-    const chatArea = document.getElementById('chatArea');
-    chatArea.innerHTML = '';
-    
-    const chatMessages = users[currentUser].chat[recipient] || [];
-    chatMessages.forEach(msg => {
-        const listItem = document.createElement('li');
-        listItem.innerText = `${msg.from}: ${msg.content}`;
-        chatArea.appendChild(listItem);
     });
 }
 
 // Загрузка пользователей при старте
 loadUsers();
+
