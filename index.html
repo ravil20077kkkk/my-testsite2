@@ -58,6 +58,11 @@
         .button:hover {
             background-color: #0056b3;
         }
+        .username {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -93,7 +98,13 @@
         </div>
     </div>
 
+    <div id="profile" style="display: none;">
+        <h2>Профиль пользователя</h2>
+        <p>Имя пользователя: <span id="profileUsername"></span></p>
+        <p>Баланс: <span id="profileBalance"></span></p>
+        <button class="button" onclick="closeProfile()">Закрыть</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
-
