@@ -57,7 +57,7 @@ function showDashboard() {
     updateUserList(); // Обновление списка пользователей при входе
 
     // Скрытие формы входа и регистрации
-    document.getElementById('auth').style.display = 'none';
+    document.getElementById('auth').style.display = 'none'; // Убедитесь, что эта строка выполняется
 }
 
 function transfer() {
