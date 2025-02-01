@@ -11,10 +11,10 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
-        #dashboard, #profile {
-            display: none;
+        #auth {
+            margin-bottom: 20px;
         }
-        .container {
+        #dashboard {
             display: flex;
             justify-content: space-between;
         }
@@ -24,6 +24,7 @@
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
         }
         .content {
             width: 65%;
@@ -32,11 +33,11 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        #userList, #transactionHistory, #chatArea, #profileMessages {
+        #userList, #transactionHistory {
             list-style-type: none;
             padding: 0;
         }
-        #userList li, #transactionHistory li, #chatArea li, #profileMessages li {
+        #userList li, #transactionHistory li {
             margin: 5px 0;
         }
     </style>
@@ -59,35 +60,20 @@
         </div>
     </div>
 
-    <div id="dashboard">
-        <h2>Добро пожаловать, <span id="userDisplay"></span></h2>
-        <div class="container">
-            <div class="sidebar">
-                <h3>Пользователи</h3>
-                <ul id="userList"></ul>
-                <h3>История транзакций</h3>
-                <ul id="transactionHistory"></ul>
-            </div>
-            <div class="content">
-                <h3>Баланс: <span id="balanceDisplay"></span></h3>
-                <input type="text" id="recipient" placeholder="Получатель">
-                <input type="number" id="amount" placeholder="Сумма">
-                <button onclick="transfer()">Перевести</button>
-                <h3>Чат с пользователем</h3>
-                <input type="text" id="messageRecipient" placeholder="Получатель">
-                <input type="text" id="messageContent" placeholder="Сообщение">
-                <button onclick="sendMessage()">Отправить</button>
-                <ul id="chatArea"></ul>
-            </div>
+    <div id="dashboard" style="display: none;">
+        <div class="sidebar">
+            <h3>Пользователи</h3>
+            <ul id="userList"></ul>
+            <h3>История транзакций</h3>
+            <ul id="transactionHistory"></ul>
         </div>
-    </div>
-
-    <div id="profile">
-        <h2>Профиль пользователя: <span id="profileUserDisplay"></span></h2>
-        <h3>Баланс: <span id="profileBalanceDisplay"></span></h3>
-        <h3>Сообщения</h3>
-        <ul id="profileMessages"></ul>
-        <button onclick="backToDashboard()">Назад</button>
+        <div class="content">
+            <h2>Добро пожаловать, <span id="userDisplay"></span></h2>
+            <h3>Баланс: <span id="balanceDisplay"></span></h3>
+            <input type="text" id="recipient" placeholder="Получатель">
+            <input type="number" id="amount" placeholder="Сумма">
+            <button onclick="transfer()">Перевести</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
