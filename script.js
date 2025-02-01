@@ -36,6 +36,7 @@ function register() {
             balance: 1000, 
             messages: [], 
             transactions: [], 
+            chat: {}, // Добавление чата
             registrationDate: new Date() 
         };
         saveUsers(); // Сохранение пользователей
@@ -113,34 +114,32 @@ function sendMessage() {
 
     if (recipient in users) {
         users[recipient].messages.push({ from: currentUser, content: content });
+        users[currentUser].chat[recipient] = users[currentUser].chat[recipient] || [];
+        users[currentUser].chat[recipient].push({ from: currentUser, content: content });
         saveUsers(); // Сохранение пользователей
         alert(`Сообщение отправлено пользователю ${recipient}`);
+        updateChat(recipient); // Обновление чата
     } else {
         alert('Пользователь не найден!');
     }
 }
 
-function viewProfile() {
-    const profileLink = document.getElementById('profileLink').value.trim();
-    const profileUsername = profileLink.startsWith('@') ? profileLink.slice(1) : profileLink;
+function viewProfile(username) {
+    document.getElementById('profileUserDisplay').innerText = username;
+    document.getElementById('profileBalanceDisplay').innerText = users[username].balance;
 
-    if (profileUsername in users) {
-        document.getElementById('profileUserDisplay').innerText = profileUsername;
-        document.getElementById('profileBalanceDisplay').innerText = users[profileUsername].balance;
+    const messageList = document.getElementById('profileMessages');
+    messageList.innerHTML = '';
+    users[username].messages.forEach(msg => {
+        const listItem = document.createElement('li');
+        listItem.innerText = `${msg.from}: ${msg.content}`;
+        messageList.appendChild(listItem);
+    });
 
-        const messageList = document.getElementById('profileMessages');
-        messageList.innerHTML = '';
-        users[profileUsername].messages.forEach(msg => {
-            const listItem = document.createElement('li');
-            listItem.innerText = `${msg.from}: ${msg.content}`;
-            messageList.appendChild(listItem);
-        });
-
-        document.getElementById('dashboard').style.display = 'none';
-        document.getElementById('profile').style.display = 'block';
-    } else {
-        alert('Пользователь не найден!');
-    }
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('profile').style.display = 'block';
+    
+    updateChat(username); // Обновление чата
 }
 
 function backToDashboard() {
@@ -164,16 +163,26 @@ function updateUserList() {
 
     sortedUsers.forEach((username, index) => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `${index + 1}. <a href="#" onclick="viewProfileByUsername('${username}')">${username}</a>`;
+        listItem.innerHTML = `${index + 1}. <a href="#" onclick="viewProfile('${username}')">${username}</a>`;
         userList.appendChild(listItem);
     });
 }
 
-// Переход к профилю пользователя
-function viewProfileByUsername(username) {
-    document.getElementById('profileLink').value = `@${username}`;
-    viewProfile();
+// Обновление чата
+function updateChat(recipient) {
+    const chatArea = document.getElementById('chatArea');
+    chatArea.innerHTML = '';
+    
+    const chatMessages = users[currentUser].chat[recipient] || [];
+    chatMessages.forEach(msg => {
+        const listItem = document.createElement('li');
+        listItem.innerText = `${msg.from}: ${msg.content}`;
+        chatArea.appendChild(listItem);
+    });
 }
+
+// Загрузка пользователей при старте
+loadUsers();
 
 // Загрузка пользователей при старте
 loadUsers();
