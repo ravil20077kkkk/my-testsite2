@@ -3,62 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система регистрации</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Чат и Транзакции</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #dashboard, #profile {
+            display: none;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .sidebar {
+            width: 30%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .content {
+            width: 65%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #userList, #transactionHistory, #chatArea, #profileMessages {
+            list-style-type: none;
+            padding: 0;
+        }
+        #userList li, #transactionHistory li, #chatArea li, #profileMessages li {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Система регистрации</h1>
-    
     <div id="auth">
-        <button onclick="showRegistration()">Зарегистрироваться</button>
-        <button onclick="showLogin()">Войти</button>
+        <div id="registration">
+            <h2>Регистрация</h2>
+            <input type="text" id="username" placeholder="Имя пользователя">
+            <input type="password" id="password" placeholder="Пароль">
+            <button onclick="register()">Зарегистрироваться</button>
+            <button onclick="showLogin()">Уже есть аккаунт?</button>
+        </div>
+        <div id="login">
+            <h2>Вход</h2>
+            <input type="text" id="loginUsername" placeholder="Имя пользователя">
+            <input type="password" id="loginPassword" placeholder="Пароль">
+            <button onclick="login()">Войти</button>
+            <button onclick="showRegistration()">Нет аккаунта?</button>
+        </div>
     </div>
 
-    <div id="registration" style="display: none;">
-        <h2>Регистрация</h2>
-        <input type="text" id="username" placeholder="Имя пользователя" required>
-        <input type="password" id="password" placeholder="Пароль" required>
-        <button onclick="register()">Зарегистрироваться</button>
+    <div id="dashboard">
+        <h2>Добро пожаловать, <span id="userDisplay"></span></h2>
+        <div class="container">
+            <div class="sidebar">
+                <h3>Пользователи</h3>
+                <ul id="userList"></ul>
+                <h3>История транзакций</h3>
+                <ul id="transactionHistory"></ul>
+            </div>
+            <div class="content">
+                <h3>Баланс: <span id="balanceDisplay"></span></h3>
+                <input type="text" id="recipient" placeholder="Получатель">
+                <input type="number" id="amount" placeholder="Сумма">
+                <button onclick="transfer()">Перевести</button>
+                <h3>Чат с пользователем</h3>
+                <input type="text" id="messageRecipient" placeholder="Получатель">
+                <input type="text" id="messageContent" placeholder="Сообщение">
+                <button onclick="sendMessage()">Отправить</button>
+                <ul id="chatArea"></ul>
+            </div>
+        </div>
     </div>
 
-    <div id="login" style="display: none;">
-        <h2>Вход</h2>
-        <input type="text" id="loginUsername" placeholder="Имя пользователя" required>
-        <input type="password" id="loginPassword" placeholder="Пароль" required>
-        <button onclick="login()">Войти</button>
-    </div>
-
-    <div id="dashboard" style="display: none;">
-        <h2>Панель управления</h2>
-        <p>Ваше имя: <span id="userDisplay"></span></p>
-        <p>Ваш баланс: $<span id="balanceDisplay">1000</span></p>
-
-        <h3>Перевести валюту</h3>
-        <input type="text" id="recipient" placeholder="Имя получателя или ссылка на профиль">
-        <input type="number" id="amount" placeholder="Сумма" min="1">
-        <button onclick="transfer()">Перевести</button>
-
-        <h3>История транзакций</h3>
-        <ul id="transactionHistory"></ul>
-
-        <h3>Сообщения</h3>
-        <input type="text" id="messageRecipient" placeholder="Имя получателя">
-        <input type="text" id="messageContent" placeholder="Сообщение">
-        <button onclick="sendMessage()">Отправить сообщение</button>
-
-        <h3>Просмотреть профиль по ссылке</h3>
-        <input type="text" id="profileLink" placeholder="Ссылка на профиль">
-        <button onclick="viewProfile()">Просмотреть профиль</button>
-
-        <h3>Зарегистрированные пользователи</h3>
-        <ul id="userList"></ul>
-
-        <button onclick="logout()">Выйти</button>
-    </div>
-
-    <div id="profile" style="display: none;">
+    <div id="profile">
         <h2>Профиль пользователя: <span id="profileUserDisplay"></span></h2>
-        <p>Баланс: $<span id="profileBalanceDisplay"></span></p>
+        <h3>Баланс: <span id="profileBalanceDisplay"></span></h3>
         <h3>Сообщения</h3>
         <ul id="profileMessages"></ul>
         <button onclick="backToDashboard()">Назад</button>
@@ -67,4 +93,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
