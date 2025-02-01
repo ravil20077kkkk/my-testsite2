@@ -6,6 +6,8 @@ function loadUsers() {
     const savedUsers = localStorage.getItem('users');
     if (savedUsers) {
         users = JSON.parse(savedUsers);
+    } else {
+        users = {}; // Инициализация пустого объекта, если данных нет
     }
 }
 
@@ -39,6 +41,7 @@ function register() {
         saveUsers(); // Сохранение пользователей
         alert('Пользователь зарегистрирован!');
         showLogin();
+        updateUserList(); // Обновление списка пользователей после регистрации
     } else {
         alert('Имя пользователя уже занято или пустое!');
     }
@@ -62,7 +65,7 @@ function showDashboard() {
     document.getElementById('userDisplay').innerText = currentUser;
     document.getElementById('balanceDisplay').innerText = users[currentUser].balance;
     updateTransactionHistory();
-    updateUserList();
+    updateUserList(); // Обновление списка пользователей при входе
 }
 
 function transfer() {
@@ -164,6 +167,12 @@ function updateUserList() {
         listItem.innerHTML = `${index + 1}. <a href="#" onclick="viewProfileByUsername('${username}')">${username}</a>`;
         userList.appendChild(listItem);
     });
+}
+
+// Переход к профилю пользователя
+function viewProfileByUsername(username) {
+    document.getElementById('profileLink').value = `@${username}`;
+    viewProfile();
 }
 
 // Загрузка пользователей при старте
