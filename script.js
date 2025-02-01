@@ -113,9 +113,12 @@ function sendMessage() {
     const content = document.getElementById('messageContent').value.trim();
 
     if (recipient in users) {
-        users[recipient].messages.push({ from: currentUser, content: content });
         users[currentUser].chat[recipient] = users[currentUser].chat[recipient] || [];
         users[currentUser].chat[recipient].push({ from: currentUser, content: content });
+
+        users[recipient].chat[currentUser] = users[recipient].chat[currentUser] || [];
+        users[recipient].chat[currentUser].push({ from: currentUser, content: content });
+
         saveUsers(); // Сохранение пользователей
         alert(`Сообщение отправлено пользователю ${recipient}`);
         updateChat(recipient); // Обновление чата
@@ -125,12 +128,13 @@ function sendMessage() {
 }
 
 function viewProfile(username) {
+    const profileUser = users[username];
     document.getElementById('profileUserDisplay').innerText = username;
-    document.getElementById('profileBalanceDisplay').innerText = users[username].balance;
+    document.getElementById('profileBalanceDisplay').innerText = profileUser.balance;
 
     const messageList = document.getElementById('profileMessages');
     messageList.innerHTML = '';
-    users[username].messages.forEach(msg => {
+    profileUser.messages.forEach(msg => {
         const listItem = document.createElement('li');
         listItem.innerText = `${msg.from}: ${msg.content}`;
         messageList.appendChild(listItem);
@@ -180,9 +184,6 @@ function updateChat(recipient) {
         chatArea.appendChild(listItem);
     });
 }
-
-// Загрузка пользователей при старте
-loadUsers();
 
 // Загрузка пользователей при старте
 loadUsers();
