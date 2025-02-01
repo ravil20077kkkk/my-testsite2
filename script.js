@@ -16,16 +16,6 @@ function saveUsers() {
     localStorage.setItem('users', JSON.stringify(users));
 }
 
-function showRegistration() {
-    document.getElementById('registration').style.display = 'block';
-    document.getElementById('login').style.display = 'none';
-}
-
-function showLogin() {
-    document.getElementById('login').style.display = 'block';
-    document.getElementById('registration').style.display = 'none';
-}
-
 function register() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
@@ -65,6 +55,11 @@ function showDashboard() {
     document.getElementById('balanceDisplay').innerText = users[currentUser].balance;
     updateTransactionHistory();
     updateUserList(); // Обновление списка пользователей при входе
+}
+
+function toggleFunctions() {
+    const content = document.getElementById('functionContent');
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
 }
 
 function transfer() {
@@ -120,8 +115,6 @@ function updateUserList() {
 function logout() {
     currentUser = null;
     document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('registration').style.display = 'none';
     document.getElementById('auth').style.display = 'block';
 }
 
