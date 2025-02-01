@@ -9,7 +9,12 @@
 <body>
     <h1>Система регистрации</h1>
     
-    <div id="registration">
+    <div id="auth">
+        <button onclick="showRegistration()">Зарегистрироваться</button>
+        <button onclick="showLogin()">Войти</button>
+    </div>
+
+    <div id="registration" style="display: none;">
         <h2>Регистрация</h2>
         <input type="text" id="username" placeholder="Имя пользователя" required>
         <input type="password" id="password" placeholder="Пароль" required>
@@ -28,12 +33,8 @@
         <p>Ваше имя: <span id="userDisplay"></span></p>
         <p>Ваш баланс: $<span id="balanceDisplay">1000</span></p>
 
-        <h3>Изменить имя</h3>
-        <input type="text" id="newUsername" placeholder="Новое имя">
-        <button onclick="changeName()">Изменить</button>
-
         <h3>Перевести валюту</h3>
-        <input type="text" id="recipient" placeholder="Имя получателя">
+        <input type="text" id="recipient" placeholder="Имя получателя или ссылка на профиль">
         <input type="number" id="amount" placeholder="Сумма" min="1">
         <button onclick="transfer()">Перевести</button>
 
@@ -45,9 +46,12 @@
         <input type="text" id="messageContent" placeholder="Сообщение">
         <button onclick="sendMessage()">Отправить сообщение</button>
 
-        <h3>Профили пользователей</h3>
-        <input type="text" id="profileUsername" placeholder="Имя пользователя">
+        <h3>Просмотреть профиль по ссылке</h3>
+        <input type="text" id="profileLink" placeholder="Ссылка на профиль">
         <button onclick="viewProfile()">Просмотреть профиль</button>
+
+        <h3>Зарегистрированные пользователи</h3>
+        <ul id="userList"></ul>
 
         <button onclick="logout()">Выйти</button>
     </div>
@@ -55,7 +59,7 @@
     <div id="profile" style="display: none;">
         <h2>Профиль пользователя: <span id="profileUserDisplay"></span></h2>
         <p>Баланс: $<span id="profileBalanceDisplay"></span></p>
-        <h3>Сообщения:</h3>
+        <h3>Сообщения</h3>
         <ul id="profileMessages"></ul>
         <button onclick="backToDashboard()">Назад</button>
     </div>
@@ -63,3 +67,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
