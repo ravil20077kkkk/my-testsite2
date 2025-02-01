@@ -107,9 +107,19 @@ function updateUserList() {
 
     sortedUsers.forEach((username, index) => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `${index + 1}. ${username}`;
+        listItem.innerHTML = `<span class="username" onclick="viewProfile('${username}')">${username}</span>`;
         userList.appendChild(listItem);
     });
+}
+
+function viewProfile(username) {
+    document.getElementById('profileUsername').innerText = username;
+    document.getElementById('profileBalance').innerText = users[username].balance;
+    document.getElementById('profile').style.display = 'block';
+}
+
+function closeProfile() {
+    document.getElementById('profile').style.display = 'none';
 }
 
 function logout() {
@@ -120,4 +130,3 @@ function logout() {
 
 // Загрузка пользователей при старте
 loadUsers();
-
