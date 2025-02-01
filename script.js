@@ -55,11 +55,9 @@ function showDashboard() {
     document.getElementById('balanceDisplay').innerText = users[currentUser].balance;
     updateTransactionHistory();
     updateUserList(); // Обновление списка пользователей при входе
-}
 
-function toggleFunctions() {
-    const content = document.getElementById('functionContent');
-    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+    // Скрытие формы входа и регистрации
+    document.getElementById('auth').style.display = 'none';
 }
 
 function transfer() {
