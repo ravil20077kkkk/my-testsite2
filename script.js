@@ -1,6 +1,19 @@
 let users = {};
 let currentUser = null;
 
+// Загрузка данных из Local Storage
+function loadUsers() {
+    const savedUsers = localStorage.getItem('users');
+    if (savedUsers) {
+        users = JSON.parse(savedUsers);
+    }
+}
+
+// Сохранение данных в Local Storage
+function saveUsers() {
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
 function showRegistration() {
     document.getElementById('registration').style.display = 'block';
     document.getElementById('login').style.display = 'none';
@@ -23,6 +36,7 @@ function register() {
             transactions: [], 
             registrationDate: new Date() 
         };
+        saveUsers(); // Сохранение пользователей
         alert('Пользователь зарегистрирован!');
         showLogin();
     } else {
@@ -55,7 +69,6 @@ function transfer() {
     const recipient = document.getElementById('recipient').value.trim();
     const amount = parseInt(document.getElementById('amount').value, 10);
 
-    // Проверка, является ли получатель именем пользователя или ссылкой
     const recipientUser = recipient.startsWith('@') ? recipient.slice(1) : recipient;
 
     if (!recipientUser || !users[recipientUser]) {
@@ -73,6 +86,7 @@ function transfer() {
         users[recipientUser].balance += amount;
         users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipientUser}`);
         users[recipientUser].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
+        saveUsers(); // Сохранение пользователей
         alert(`$${amount} переведено пользователю ${recipientUser}`);
         updateTransactionHistory();
     } else {
@@ -96,6 +110,7 @@ function sendMessage() {
 
     if (recipient in users) {
         users[recipient].messages.push({ from: currentUser, content: content });
+        saveUsers(); // Сохранение пользователей
         alert(`Сообщение отправлено пользователю ${recipient}`);
     } else {
         alert('Пользователь не найден!');
@@ -104,8 +119,6 @@ function sendMessage() {
 
 function viewProfile() {
     const profileLink = document.getElementById('profileLink').value.trim();
-
-    // Проверка, является ли ссылка на профиль корректной
     const profileUsername = profileLink.startsWith('@') ? profileLink.slice(1) : profileLink;
 
     if (profileUsername in users) {
@@ -140,6 +153,7 @@ function logout() {
     document.getElementById('auth').style.display = 'block';
 }
 
+// Обновление списка пользователей
 function updateUserList() {
     const userList = document.getElementById('userList');
     userList.innerHTML = '';
@@ -152,8 +166,5 @@ function updateUserList() {
     });
 }
 
-function viewProfileByUsername(username) {
-    document.getElementById('profileLink').value = username;
-    viewProfile();
-}
-
+// Загрузка пользователей при старте
+loadUsers();
