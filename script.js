@@ -123,7 +123,7 @@ function closeProfile() {
 function logout() {
     currentUser = null;
     document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('auth').style.display = 'block';
+    document.getElementById('auth').style.display = 'block'; // Показываем форму аутентификации
 }
 
 // Загрузка пользователей при старте
