@@ -57,19 +57,25 @@ function transfer() {
     const recipient = document.getElementById('recipient').value.trim();
     const amount = parseInt(document.getElementById('amount').value, 10);
     
-    if (recipient in users) {
-        if (amount > 0 && users[currentUser].balance >= amount) {
-            users[currentUser].balance -= amount;
-            users[recipient].balance += amount;
-            users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipient}`);
-            users[recipient].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
-            alert(`$${amount} переведено пользователю ${recipient}`);
-            showDashboard();
-        } else {
-            alert('Недостаточно средств для перевода!');
-        }
-    } else {
+    if (!recipient || !users[recipient]) {
         alert('Пользователь не найден!');
+        return;
+    }
+
+    if (amount <= 0) {
+        alert('Сумма должна быть больше нуля!');
+        return;
+    }
+
+    if (users[currentUser].balance >= amount) {
+        users[currentUser].balance -= amount;
+        users[recipient].balance += amount;
+        users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipient}`);
+        users[recipient].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
+        alert(`$${amount} переведено пользователю ${recipient}`);
+        showDashboard();
+    } else {
+        alert('Недостаточно средств для перевода!');
     }
 }
 
