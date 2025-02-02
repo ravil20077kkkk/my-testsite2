@@ -43,14 +43,14 @@
             margin: 5px 0;
         }
         .button {
-            margin-right: 10px;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
+            margin: 10px 0; /* Отступ сверху и снизу для кнопок */
+            width: 100%; /* Кнопки занимают всю ширину */
         }
         .button:hover {
             background-color: #0056b3;
@@ -65,11 +65,6 @@
             font-size: 2.5em; /* Увеличиваем размер заголовка */
             margin-bottom: 20px; /* Отступ снизу */
         }
-        .button-container {
-            display: flex;
-            justify-content: flex-end; /* Смещаем кнопки вправо */
-            margin-top: 20px; /* Отступ сверху для кнопок */
-        }
     </style>
 </head>
 <body>
@@ -78,54 +73,39 @@
             <h2>Регистрация</h2>
             <input type="text" id="username" placeholder="Имя пользователя">
             <input type="password" id="password" placeholder="Пароль">
-            <div class="button-container">
-                <button class="button" onclick="register()">Зарегистрироваться</button>
-            </div>
+            <button class="button" onclick="register()">Зарегистрироваться</button>
         </div>
         <div id="login">
             <h2>Вход</h2>
             <input type="text" id="loginUsername" placeholder="Имя пользователя">
             <input type="password" id="loginPassword" placeholder="Пароль">
-            <div class="button-container">
-                <button class="button" onclick="login()">Войти</button>
-            </div>
+            <button class="button" onclick="login()">Войти</button>
         </div>
     </div>
 
     <div id="dashboard">
-        <h2 id="greeting" style="text-align: center;">Hello, World!</h2> <!-- Приветствие перенесено в центр -->
-        <span id="userDisplay"></span>
         <div class="button-container">
             <button class="button" onclick="logout()">Выйти</button>
+            <button class="button" onclick="transfer()">Перевести</button>
+            <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
+            <button class="button" onclick="closeProfile()">Закрыть</button>
         </div>
         
         <h3>Баланс: <span id="balanceDisplay"></span></h3>
         <input type="text" id="recipient" placeholder="Получатель">
         <input type="number" id="amount" placeholder="Сумма">
-        <div class="button-container">
-            <button class="button" onclick="transfer()">Перевести</button>
-        </div>
         
         <h3>Пользователи</h3>
         <ul id="userList"></ul>
         
         <h3>История транзакций</h3>
         <ul id="transactionHistory"></ul>
-
-        <h3>Изменить никнейм</h3>
-        <input type="text" id="newUsername" placeholder="Новый никнейм">
-        <div class="button-container">
-            <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
-        </div>
     </div>
 
     <div id="profile" style="display: none;">
         <h2>Профиль пользователя</h2>
         <p>Имя пользователя: <span id="profileUsername"></span></p>
         <p>Баланс: <span id="profileBalance"></span></p>
-        <div class="button-container">
-            <button class="button" onclick="closeProfile()">Закрыть</button>
-        </div>
     </div>
 
     <script src="script.js"></script>
