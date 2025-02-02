@@ -126,5 +126,30 @@ function logout() {
     document.getElementById('auth').style.display = 'block'; // Показываем форму аутентификации
 }
 
+// Функция для изменения никнейма
+function changeUsername() {
+    const newUsername = document.getElementById('newUsername').value.trim();
+    
+    if (newUsername && !users[newUsername]) {
+        users[newUsername] = { 
+            password: users[currentUser].password, 
+            balance: users[currentUser].balance, 
+            transactions: users[currentUser].transactions, 
+            registrationDate: users[currentUser].registrationDate 
+        };
+        
+        delete users[currentUser]; // Удаляем старое имя пользователя
+        saveUsers(); // Сохраняем изменения
+        currentUser = newUsername; // Обновляем текущего пользователя
+        document.getElementById('userDisplay').innerText = currentUser;
+        document.getElementById('profileUsername').innerText = currentUser;
+        document.getElementById('newUsername').value = ''; // Очистить поле
+        alert('Никнейм успешно изменён!');
+        updateUserList(); // Обновляем список пользователей
+    } else {
+        alert('Введите уникальный никнейм.');
+    }
+}
+
 // Загрузка пользователей при старте
 loadUsers();
