@@ -20,30 +20,47 @@ function register() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    if (username && password && !users[username]) {
-        users[username] = { 
-            password: password, 
-            balance: 1000, 
-            transactions: [], 
-            registrationDate: new Date() 
-        };
-        saveUsers(); // Сохранение пользователей
-        alert('Пользователь зарегистрирован!');
-        showLogin(); // Убедитесь, что эта функция определена
-        updateUserList(); // Обновление списка пользователей после регистрации
-    } else {
-        alert('Имя пользователя уже занято или пустое!');
+    // Проверяем, что имя пользователя и пароль не пустые
+    if (!username || !password) {
+        alert('Имя пользователя и пароль не могут быть пустыми!');
+        return;
     }
+
+    // Проверяем, что имя пользователя уникально
+    if (users[username]) {
+        alert('Имя пользователя уже занято!');
+        return;
+    }
+
+    // Создаем нового пользователя
+    users[username] = { 
+        password: password, 
+        balance: 1000, 
+        transactions: [], 
+        registrationDate: new Date() 
+    };
+
+    saveUsers(); // Сохраняем данные
+    alert('Пользователь успешно зарегистрирован!');
+    showLogin(); // Переход на страницу входа
+    updateUserList(); // Обновляем список пользователей
 }
 
 function login() {
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
 
+    // Проверяем, что поля не пустые
+    if (!username || !password) {
+        alert('Имя пользователя и пароль не могут быть пустыми!');
+        return;
+    }
+
+    // Проверяем существование пользователя и правильность пароля
     if (users[username] && users[username].password === password) {
         currentUser = username;
         alert('Вы успешно вошли!');
-        showDashboard();
+        showDashboard(); // Переход на панель управления
     } else {
         alert('Неправильное имя пользователя или пароль!');
     }
