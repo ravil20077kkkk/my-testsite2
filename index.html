@@ -127,9 +127,9 @@
                 return;
             }
 
-            // Добавляем нового пользователя
-            users.push({ username, password, balance: 0 });
-            alert('Регистрация успешна!');
+            // Добавляем нового пользователя с начальным балансом 10000
+            users.push({ username, password, balance: 10000 });
+            alert('Регистрация успешна! Ваш баланс: 10000');
             document.getElementById('regUsername').value = '';
             document.getElementById('regPassword').value = '';
         }
@@ -223,4 +223,3 @@
     </script>
 </body>
 </html>
-
