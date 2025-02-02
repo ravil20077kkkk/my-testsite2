@@ -105,7 +105,55 @@
         <button class="button" onclick="closeProfile()">Закрыть</button>
     </div>
 
+    <script>
+        // Пример данных для пользователей и транзакций
+        const users = [
+            { username: 'user1', balance: 100 },
+            { username: 'user2', balance: 200 },
+        ];
+
+        const transactions = [
+            { id: 1, from: 'user1', to: 'user2', amount: 50 },
+            { id: 2, from: 'user2', to: 'user1', amount: 30 },
+        ];
+
+        // Функция для отображения пользователей
+        function displayUsers() {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="username" onclick="viewProfile('${user.username}')">${user.username}</span>`;
+                userList.appendChild(li);
+            });
+        }
+
+        // Функция для отображения истории транзакций
+        function displayTransactions() {
+            const transactionHistory = document.getElementById('transactionHistory');
+            transactionHistory.innerHTML = '';
+            transactions.forEach(transaction => {
+                const li = document.createElement('li');
+                li.textContent = `От: ${transaction.from}, Кому: ${transaction.to}, Сумма: ${transaction.amount}`;
+                transactionHistory.appendChild(li);
+            });
+        }
+
+        // Функция для просмотра профиля пользователя
+        function viewProfile(username) {
+            const user = users.find(u => u.username === username);
+            if (user) {
+                document.getElementById('profileUsername').textContent = user.username;
+                document.getElementById('profileBalance').textContent = user.balance;
+                document.getElementById('profile').style.display = 'block';
+            }
+        }
+
+        // Вызов функций для отображения пользователей и транзакций
+        displayUsers();
+        displayTransactions();
+    </script>
+
     <script src="script.js"></script>
 </body>
 </html>
-
