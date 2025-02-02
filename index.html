@@ -43,22 +43,32 @@
             margin: 5px 0;
         }
         .button {
+            margin-right: 10px;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px 0; /* Отступ сверху и снизу для кнопок */
-            width: 100%; /* Кнопки занимают всю ширину */
+            margin-top: 20px;
         }
         .button:hover {
             background-color: #0056b3;
+        }
+        .username {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
         }
         h2 {
             text-align: center; /* Центрируем заголовок */
             font-size: 2.5em; /* Увеличиваем размер заголовка */
             margin-bottom: 20px; /* Отступ снизу */
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column; /* Вертикальное расположение кнопок */
+            align-items: flex-start; /* Выравнивание по левому краю */
         }
     </style>
 </head>
@@ -79,11 +89,12 @@
     </div>
 
     <div id="dashboard">
-        <h2>Панель управления</h2>
-        <button class="button" onclick="logout()">Выйти</button>
-        <button class="button" onclick="transfer()">Перевести</button>
-        <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
-        <button class="button" onclick="closeProfile()">Закрыть</button>
+        <div class="button-container">
+            <button class="button" onclick="logout()">Выйти</button>
+            <button class="button" onclick="transfer()">Перевести</button>
+            <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
+            <button class="button" onclick="closeProfile()">Закрыть</button>
+        </div>
         
         <h3>Баланс: <span id="balanceDisplay"></span></h3>
         <input type="text" id="recipient" placeholder="Получатель">
