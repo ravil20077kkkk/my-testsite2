@@ -43,22 +43,22 @@
             margin: 5px 0;
         }
         .button {
+            margin-right: 10px;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px 0; /* Отступ сверху и снизу для кнопок */
-            width: 100%; /* Кнопки занимают всю ширину */
+            margin-top: 20px;
         }
         .button:hover {
             background-color: #0056b3;
         }
-        h2 {
-            text-align: center; /* Центрируем заголовок */
-            font-size: 2.5em; /* Увеличиваем размер заголовка */
-            margin-bottom: 20px; /* Отступ снизу */
+        .username {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -79,29 +79,33 @@
     </div>
 
     <div id="dashboard">
-        <h2>Панель управления</h2>
+        <span id="userDisplay"></span>
         <button class="button" onclick="logout()">Выйти</button>
-        <button class="button" onclick="transfer()">Перевести</button>
-        <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
-        <button class="button" onclick="closeProfile()">Закрыть</button>
         
         <h3>Баланс: <span id="balanceDisplay"></span></h3>
         <input type="text" id="recipient" placeholder="Получатель">
         <input type="number" id="amount" placeholder="Сумма">
+        <button class="button" onclick="transfer()">Перевести</button>
         
         <h3>Пользователи</h3>
         <ul id="userList"></ul>
         
         <h3>История транзакций</h3>
         <ul id="transactionHistory"></ul>
+
+        <h3>Изменить никнейм</h3>
+        <input type="text" id="newUsername" placeholder="Новый никнейм">
+        <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
     </div>
 
     <div id="profile" style="display: none;">
         <h2>Профиль пользователя</h2>
         <p>Имя пользователя: <span id="profileUsername"></span></p>
         <p>Баланс: <span id="profileBalance"></span></p>
+        <button class="button" onclick="closeProfile()">Закрыть</button>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
