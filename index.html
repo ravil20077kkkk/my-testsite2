@@ -114,14 +114,24 @@
             const username = document.getElementById('regUsername').value;
             const password = document.getElementById('regPassword').value;
 
-            if (username && password) {
-                users.push({ username, password, balance: 0 });
-                alert('Регистрация успешна!');
-                document.getElementById('regUsername').value = '';
-                document.getElementById('regPassword').value = '';
-            } else {
+            // Проверяем, заполнены ли поля
+            if (!username || !password) {
                 alert('Пожалуйста, заполните все поля.');
+                return;
             }
+
+            // Проверяем, существует ли уже пользователь с таким именем
+            const existingUser = users.find(u => u.username === username);
+            if (existingUser) {
+                alert('Пользователь с таким именем уже существует.');
+                return;
+            }
+
+            // Добавляем нового пользователя
+            users.push({ username, password, balance: 0 });
+            alert('Регистрация успешна!');
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
         }
 
         function login() {
@@ -213,3 +223,4 @@
     </script>
 </body>
 </html>
+
