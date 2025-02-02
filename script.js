@@ -1,141 +1,75 @@
-let users = {};
+let users = JSON.parse(localStorage.getItem('users')) || [];
+const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 let currentUser = null;
 
-// Загрузка данных из Local Storage
-function loadUsers() {
-    const savedUsers = localStorage.getItem('users');
-    if (savedUsers) {
-        users = JSON.parse(savedUsers);
-    } else {
-        users = {}; // Инициализация пустого объекта, если данных нет
-    }
-}
-
-// Сохранение данных в Local Storage
-function saveUsers() {
-    localStorage.setItem('users', JSON.stringify(users));
-}
-
 function register() {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    const username = document.getElementById('regUsername').value;
+    const password = document.getElementById('regPassword').value;
 
-    // Проверяем, что имя пользователя и пароль не пустые
     if (!username || !password) {
-        alert('Имя пользователя и пароль не могут быть пустыми!');
+        alert('Пожалуйста, заполните все поля.');
         return;
     }
 
-    // Проверяем, что имя пользователя уникально
-    if (users[username]) {
-        alert('Имя пользователя уже занято!');
+    const existingUser = users.find(u => u.username === username);
+    if (existingUser) {
+        alert('Пользователь с таким именем уже существует.');
         return;
     }
 
-    // Создаем нового пользователя
-    users[username] = { 
-        password: password, 
-        balance: 1000, 
-        transactions: [], 
-        registrationDate: new Date() 
-    };
-
-    saveUsers(); // Сохраняем данные
-    alert('Пользователь успешно зарегистрирован!');
-    showLogin(); // Переход на страницу входа
-    updateUserList(); // Обновляем список пользователей
+    const newUser = { username, password, balance: 10000, registrationDate: new Date() };
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Регистрация успешна! Ваш баланс: 10000');
+    document.getElementById('regUsername').value = '';
+    document.getElementById('regPassword').value = '';
 }
 
 function login() {
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const user = users.find(u => u.username === username && u.password === password);
 
-    // Проверяем, что поля не пустые
-    if (!username || !password) {
-        alert('Имя пользователя и пароль не могут быть пустыми!');
-        return;
-    }
-
-    // Проверяем существование пользователя и правильность пароля
-    if (users[username] && users[username].password === password) {
-        currentUser = username;
-        alert('Вы успешно вошли!');
-        showDashboard(); // Переход на панель управления
+    if (user) {
+        currentUser = user;
+        document.getElementById('auth').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('userDisplay').textContent = `Добро пожаловать, ${user.username}!`;
+        document.getElementById('balanceDisplay').textContent = user.balance;
+        displayUsers();
+        displayTransactions();
     } else {
-        alert('Неправильное имя пользователя или пароль!');
+        alert('Неверное имя пользователя или пароль');
     }
 }
 
-function showLogin() {
-    document.getElementById('auth').style.display = 'block';
-    document.getElementById('dashboard').style.display = 'none';
-}
-
-function showDashboard() {
-    document.getElementById('dashboard').style.display = 'flex';
-    document.getElementById('userDisplay').innerText = currentUser;
-    document.getElementById('balanceDisplay').innerText = users[currentUser].balance;
-    updateTransactionHistory();
-    updateUserList(); // Обновление списка пользователей при входе
-
-    // Скрытие формы входа и регистрации
-    document.getElementById('auth').style.display = 'none'; // Убедитесь, что эта строка выполняется
-}
-
-function transfer() {
-    const recipient = document.getElementById('recipient').value.trim();
-    const amount = parseInt(document.getElementById('amount').value, 10);
-
-    if (!recipient || !users[recipient]) {
-        alert('Пользователь не найден!');
-        return;
-    }
-
-    if (amount <= 0) {
-        alert('Сумма должна быть больше нуля!');
-        return;
-    }
-
-    if (users[currentUser].balance >= amount) {
-        users[currentUser].balance -= amount;
-        users[recipient].balance += amount;
-        users[currentUser].transactions.push(`$${amount} переведено пользователю ${recipient}`);
-        users[recipient].transactions.push(`$${amount} получено от пользователя ${currentUser}`);
-        saveUsers(); // Сохранение пользователей
-        alert(`$${amount} переведено пользователю ${recipient}`);
-        updateTransactionHistory();
-    } else {
-        alert('Недостаточно средств для перевода!');
-    }
-}
-
-function updateTransactionHistory() {
-    const historyList = document.getElementById('transactionHistory');
-    historyList.innerHTML = '';
-    users[currentUser].transactions.forEach(transaction => {
-        const listItem = document.createElement('li');
-        listItem.innerText = transaction;
-        historyList.appendChild(listItem);
+function displayUsers() {
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+    users.sort((a, b) => new Date(a.registrationDate) - new Date(b.registrationDate)).forEach(user => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="username" onclick="viewProfile('${user.username}')">${user.username}</span>`;
+        userList.appendChild(li);
     });
 }
 
-// Обновление списка пользователей
-function updateUserList() {
-    const userList = document.getElementById('userList');
-    userList.innerHTML = '';
-    const sortedUsers = Object.keys(users).sort((a, b) => users[a].registrationDate - users[b].registrationDate);
-
-    sortedUsers.forEach((username) => {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `<span class="username" onclick="viewProfile('${username}')">${username}</span>`;
-        userList.appendChild(listItem);
+function displayTransactions() {
+    const transactionHistory = document.getElementById('transactionHistory');
+    transactionHistory.innerHTML = '';
+    transactions.forEach(transaction => {
+        const li = document.createElement('li');
+        li.textContent = `От: ${transaction.from}, Кому: ${transaction.to}, Сумма: ${transaction.amount}`;
+        transactionHistory.appendChild(li);
     });
 }
 
 function viewProfile(username) {
-    document.getElementById('profileUsername').innerText = username;
-    document.getElementById('profileBalance').innerText = users[username].balance;
-    document.getElementById('profile').style.display = 'block';
+    const user = users.find(u => u.username === username);
+    if (user) {
+        document.getElementById('profileUsername').textContent = user.username;
+        document.getElementById('profileBalance').textContent = user.balance;
+        document.getElementById('profile').style.display = 'block';
+    }
 }
 
 function closeProfile() {
@@ -144,38 +78,44 @@ function closeProfile() {
 
 function logout() {
     currentUser = null;
+    document.getElementById('auth').style.display = 'block';
     document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('auth').style.display = 'block'; // Показываем форму аутентификации
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
 }
 
-// Функция для изменения никнейма
-function changeUsername() {
-    const newUsername = document.getElementById('newUsername').value.trim();
-    
-    if (newUsername && !users[newUsername]) {
-        users[newUsername] = { 
-            password: users[currentUser].password, 
-            balance: users[currentUser].balance, 
-            transactions: users[currentUser].transactions, 
-            registrationDate: users[currentUser].registrationDate 
-        };
-        
-        delete users[currentUser]; // Удаляем старое имя пользователя
-        saveUsers(); // Сохраняем изменения
-        currentUser = newUsername; // Обновляем текущего пользователя
-        document.getElementById('userDisplay').innerText = currentUser;
-        document.getElementById('profileUsername').innerText = currentUser;
-        document.getElementById('newUsername').value = ''; // Очистить поле
-        alert('Никнейм успешно изменён!');
-        updateUserList(); // Обновляем список пользователей
+function transfer() {
+    const recipient = document.getElementById('recipient').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const recipientUser = users.find(u => u.username === recipient);
+
+    if (recipientUser && amount > 0 && currentUser.balance >= amount) {
+        currentUser.balance -= amount;
+        recipientUser.balance += amount;
+        transactions.push({ from: currentUser.username, to: recipientUser.username, amount });
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+        document.getElementById('balanceDisplay').textContent = currentUser.balance;
+        displayTransactions();
+        alert('Перевод успешен!');
     } else {
-        alert('Введите уникальный никнейм.');
+        alert('Ошибка перевода. Проверьте данные.');
     }
 }
 
-// Привязка событий к кнопкам
-document.getElementById('registerButton').addEventListener('click', register);
-document.getElementById('loginButton').addEventListener('click', login);
-
-// Загрузка пользователей при старте
-loadUsers();
+function changeUsername() {
+    const newUsername = document.getElementById('newUsername').value;
+    if (newUsername) {
+        const existingUser = users.find(u => u.username === newUsername);
+        if (!existingUser) {
+            currentUser.username = newUsername;
+            alert('Никнейм изменен!');
+            displayUsers();
+            localStorage.setItem('users', JSON.stringify(users));
+        } else {
+            alert('Такое имя пользователя уже занято.');
+        }
+    } else {
+        alert('Введите новый никнейм.');
+    }
+}
