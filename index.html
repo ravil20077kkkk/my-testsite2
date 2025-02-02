@@ -55,11 +55,6 @@
         .button:hover {
             background-color: #0056b3;
         }
-        .username {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-        }
         h2 {
             text-align: center; /* Центрируем заголовок */
             font-size: 2.5em; /* Увеличиваем размер заголовка */
@@ -84,12 +79,11 @@
     </div>
 
     <div id="dashboard">
-        <div class="button-container">
-            <button class="button" onclick="logout()">Выйти</button>
-            <button class="button" onclick="transfer()">Перевести</button>
-            <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
-            <button class="button" onclick="closeProfile()">Закрыть</button>
-        </div>
+        <h2>Панель управления</h2>
+        <button class="button" onclick="logout()">Выйти</button>
+        <button class="button" onclick="transfer()">Перевести</button>
+        <button class="button" onclick="changeUsername()">Сохранить никнейм</button>
+        <button class="button" onclick="closeProfile()">Закрыть</button>
         
         <h3>Баланс: <span id="balanceDisplay"></span></h3>
         <input type="text" id="recipient" placeholder="Получатель">
