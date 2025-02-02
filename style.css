@@ -33,7 +33,7 @@ button:hover {
     background-color: #005bb5;
 }
 
-#registration, #login, #dashboard, #profile {
+#registration, #login, #dashboard, #profile, #changeUsernameForm {
     background: white;
     padding: 20px;
     margin: 20px auto;
@@ -64,4 +64,12 @@ li {
 
 #profile {
     display: none;
+}
+
+#changeUsernameForm {
+    display: none; /* Скрываем форму изменения никнейма по умолчанию */
+}
+
+.change-username-button {
+    margin-top: 20px; /* Отступ для кнопки изменения никнейма */
 }
