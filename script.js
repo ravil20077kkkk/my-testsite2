@@ -49,6 +49,11 @@ function login() {
     }
 }
 
+function showLogin() {
+    document.getElementById('auth').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+}
+
 function showDashboard() {
     document.getElementById('dashboard').style.display = 'flex';
     document.getElementById('userDisplay').innerText = currentUser;
@@ -103,7 +108,7 @@ function updateUserList() {
     userList.innerHTML = '';
     const sortedUsers = Object.keys(users).sort((a, b) => users[a].registrationDate - users[b].registrationDate);
 
-    sortedUsers.forEach((username, index) => {
+    sortedUsers.forEach((username) => {
         const listItem = document.createElement('li');
         listItem.innerHTML = `<span class="username" onclick="viewProfile('${username}')">${username}</span>`;
         userList.appendChild(listItem);
@@ -150,6 +155,10 @@ function changeUsername() {
         alert('Введите уникальный никнейм.');
     }
 }
+
+// Привязка событий к кнопкам
+document.getElementById('registerButton').addEventListener('click', register);
+document.getElementById('loginButton').addEventListener('click', login);
 
 // Загрузка пользователей при старте
 loadUsers();
