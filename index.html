@@ -66,8 +66,8 @@
     <div id="auth">
         <div id="registration">
             <h2>Регистрация</h2>
-            <input type="text" id="username" placeholder="Имя пользователя">
-            <input type="password" id="password" placeholder="Пароль">
+            <input type="text" id="regUsername" placeholder="Имя пользователя">
+            <input type="password" id="regPassword" placeholder="Пароль">
             <button class="button" onclick="register()">Зарегистрироваться</button>
         </div>
         <div id="login">
@@ -106,24 +106,31 @@
     </div>
 
     <script>
-        // Пример данных для пользователей и транзакций
-        const users = [
-            { username: 'user1', password: 'pass1', balance: 100 },
-            { username: 'user2', password: 'pass2', balance: 200 },
-        ];
+        const users = [];
+        const transactions = [];
+        let currentUser = null;
 
-        const transactions = [
-            { id: 1, from: 'user1', to: 'user2', amount: 50 },
-            { id: 2, from: 'user2', to: 'user1', amount: 30 },
-        ];
+        function register() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
 
-        // Функция для входа в аккаунт
+            if (username && password) {
+                users.push({ username, password, balance: 0 });
+                alert('Регистрация успешна!');
+                document.getElementById('regUsername').value = '';
+                document.getElementById('regPassword').value = '';
+            } else {
+                alert('Пожалуйста, заполните все поля.');
+            }
+        }
+
         function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
             const user = users.find(u => u.username === username && u.password === password);
 
             if (user) {
+                currentUser = user;
                 document.getElementById('auth').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('userDisplay').textContent = `Добро пожаловать, ${user.username}!`;
@@ -135,7 +142,6 @@
             }
         }
 
-        // Функция для отображения пользователей
         function displayUsers() {
             const userList = document.getElementById('userList');
             userList.innerHTML = '';
@@ -146,7 +152,6 @@
             });
         }
 
-        // Функция для отображения истории транзакций
         function displayTransactions() {
             const transactionHistory = document.getElementById('transactionHistory');
             transactionHistory.innerHTML = '';
@@ -157,7 +162,6 @@
             });
         }
 
-        // Функция для просмотра профиля пользователя
         function viewProfile(username) {
             const user = users.find(u => u.username === username);
             if (user) {
@@ -167,20 +171,45 @@
             }
         }
 
-        // Функция для выхода из аккаунта
+        function closeProfile() {
+            document.getElementById('profile').style.display = 'none';
+        }
+
         function logout() {
+            currentUser = null;
             document.getElementById('auth').style.display = 'block';
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('loginUsername').value = '';
             document.getElementById('loginPassword').value = '';
         }
 
-        // Вызов функций для отображения пользователей и транзакций
-        displayUsers();
-        displayTransactions();
-    </script>
+        function transfer() {
+            const recipient = document.getElementById('recipient').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const recipientUser = users.find(u => u.username === recipient);
 
-    <script src="script.js"></script>
+            if (recipientUser && amount > 0 && currentUser.balance >= amount) {
+                currentUser.balance -= amount;
+                recipientUser.balance += amount;
+                transactions.push({ from: currentUser.username, to: recipientUser.username, amount });
+                document.getElementById('balanceDisplay').textContent = currentUser.balance;
+                displayTransactions();
+                alert('Перевод успешен!');
+            } else {
+                alert('Ошибка перевода. Проверьте данные.');
+            }
+        }
+
+        function changeUsername() {
+            const newUsername = document.getElementById('newUsername').value;
+            if (newUsername) {
+                currentUser.username = newUsername;
+                alert('Никнейм изменен!');
+                displayUsers();
+            } else {
+                alert('Введите новый никнейм.');
+            }
+        }
+    </script>
 </body>
 </html>
-
