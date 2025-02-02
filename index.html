@@ -108,14 +108,32 @@
     <script>
         // Пример данных для пользователей и транзакций
         const users = [
-            { username: 'user1', balance: 100 },
-            { username: 'user2', balance: 200 },
+            { username: 'user1', password: 'pass1', balance: 100 },
+            { username: 'user2', password: 'pass2', balance: 200 },
         ];
 
         const transactions = [
             { id: 1, from: 'user1', to: 'user2', amount: 50 },
             { id: 2, from: 'user2', to: 'user1', amount: 30 },
         ];
+
+        // Функция для входа в аккаунт
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                document.getElementById('auth').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('userDisplay').textContent = `Добро пожаловать, ${user.username}!`;
+                document.getElementById('balanceDisplay').textContent = user.balance;
+                displayUsers();
+                displayTransactions();
+            } else {
+                alert('Неверное имя пользователя или пароль');
+            }
+        }
 
         // Функция для отображения пользователей
         function displayUsers() {
@@ -149,6 +167,14 @@
             }
         }
 
+        // Функция для выхода из аккаунта
+        function logout() {
+            document.getElementById('auth').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
         // Вызов функций для отображения пользователей и транзакций
         displayUsers();
         displayTransactions();
@@ -157,3 +183,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
