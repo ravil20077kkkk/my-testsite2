@@ -106,8 +106,8 @@
     </div>
 
     <script>
-        const users = [];
-        const transactions = [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
         let currentUser = null;
 
         function register() {
@@ -128,7 +128,9 @@
             }
 
             // Добавляем нового пользователя с начальным балансом 10000
-            users.push({ username, password, balance: 10000 });
+            const newUser = { username, password, balance: 10000 };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users)); // Сохраняем пользователей в локальное хранилище
             alert('Регистрация успешна! Ваш баланс: 10000');
             document.getElementById('regUsername').value = '';
             document.getElementById('regPassword').value = '';
@@ -202,6 +204,8 @@
                 currentUser.balance -= amount;
                 recipientUser.balance += amount;
                 transactions.push({ from: currentUser.username, to: recipientUser.username, amount });
+                localStorage.setItem('users', JSON.stringify(users)); // Сохраняем обновленных пользователей
+                localStorage.setItem('transactions', JSON.stringify(transactions)); // Сохраняем транзакции
                 document.getElementById('balanceDisplay').textContent = currentUser.balance;
                 displayTransactions();
                 alert('Перевод успешен!');
@@ -216,6 +220,7 @@
                 currentUser.username = newUsername;
                 alert('Никнейм изменен!');
                 displayUsers();
+                localStorage.setItem('users', JSON.stringify(users)); // Сохраняем обновленных пользователей
             } else {
                 alert('Введите новый никнейм.');
             }
