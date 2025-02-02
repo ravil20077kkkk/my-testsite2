@@ -4,63 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Чат и Транзакции</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        #auth {
-            margin-bottom: 20px;
-        }
-        #dashboard {
-            display: none; /* Скрываем панель управления по умолчанию */
-        }
-        .header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .content {
-            width: 100%;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #userList, #transactionHistory {
-            list-style-type: none;
-            padding: 0;
-        }
-        #userList li, #transactionHistory li {
-            margin: 5px 0;
-        }
-        .button {
-            margin-right: 10px;
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .username {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="auth">
@@ -78,7 +22,7 @@
         </div>
     </div>
 
-    <div id="dashboard">
+    <div id="dashboard" style="display: none;">
         <span id="userDisplay"></span>
         <button class="button" onclick="logout()">Выйти</button>
         
@@ -105,126 +49,6 @@
         <button class="button" onclick="closeProfile()">Закрыть</button>
     </div>
 
-    <script>
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-        let currentUser = null;
-
-        function register() {
-            const username = document.getElementById('regUsername').value;
-            const password = document.getElementById('regPassword').value;
-
-            // Проверяем, заполнены ли поля
-            if (!username || !password) {
-                alert('Пожалуйста, заполните все поля.');
-                return;
-            }
-
-            // Проверяем, существует ли уже пользователь с таким именем
-            const existingUser = users.find(u => u.username === username);
-            if (existingUser) {
-                alert('Пользователь с таким именем уже существует.');
-                return;
-            }
-
-            // Добавляем нового пользователя с начальным балансом 10000
-            const newUser = { username, password, balance: 10000 };
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users)); // Сохраняем пользователей в локальное хранилище
-            alert('Регистрация успешна! Ваш баланс: 10000');
-            document.getElementById('regUsername').value = '';
-            document.getElementById('regPassword').value = '';
-        }
-
-        function login() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const user = users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                currentUser = user;
-                document.getElementById('auth').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                document.getElementById('userDisplay').textContent = `Добро пожаловать, ${user.username}!`;
-                document.getElementById('balanceDisplay').textContent = user.balance;
-                displayUsers();
-                displayTransactions();
-            } else {
-                alert('Неверное имя пользователя или пароль');
-            }
-        }
-
-        function displayUsers() {
-            const userList = document.getElementById('userList');
-            userList.innerHTML = '';
-            users.forEach(user => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span class="username" onclick="viewProfile('${user.username}')">${user.username}</span>`;
-                userList.appendChild(li);
-            });
-        }
-
-        function displayTransactions() {
-            const transactionHistory = document.getElementById('transactionHistory');
-            transactionHistory.innerHTML = '';
-            transactions.forEach(transaction => {
-                const li = document.createElement('li');
-                li.textContent = `От: ${transaction.from}, Кому: ${transaction.to}, Сумма: ${transaction.amount}`;
-                transactionHistory.appendChild(li);
-            });
-        }
-
-        function viewProfile(username) {
-            const user = users.find(u => u.username === username);
-            if (user) {
-                document.getElementById('profileUsername').textContent = user.username;
-                document.getElementById('profileBalance').textContent = user.balance;
-                document.getElementById('profile').style.display = 'block';
-            }
-        }
-
-        function closeProfile() {
-            document.getElementById('profile').style.display = 'none';
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('auth').style.display = 'block';
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
-
-        function transfer() {
-            const recipient = document.getElementById('recipient').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const recipientUser = users.find(u => u.username === recipient);
-
-            if (recipientUser && amount > 0 && currentUser.balance >= amount) {
-                currentUser.balance -= amount;
-                recipientUser.balance += amount;
-                transactions.push({ from: currentUser.username, to: recipientUser.username, amount });
-                localStorage.setItem('users', JSON.stringify(users)); // Сохраняем обновленных пользователей
-                localStorage.setItem('transactions', JSON.stringify(transactions)); // Сохраняем транзакции
-                document.getElementById('balanceDisplay').textContent = currentUser.balance;
-                displayTransactions();
-                alert('Перевод успешен!');
-            } else {
-                alert('Ошибка перевода. Проверьте данные.');
-            }
-        }
-
-        function changeUsername() {
-            const newUsername = document.getElementById('newUsername').value;
-            if (newUsername) {
-                currentUser.username = newUsername;
-                alert('Никнейм изменен!');
-                displayUsers();
-                localStorage.setItem('users', JSON.stringify(users)); // Сохраняем обновленных пользователей
-            } else {
-                alert('Введите новый никнейм.');
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
